@@ -351,7 +351,6 @@ ggplot(data = tripdata2)+
        caption = "source: Cyclistic")
 ```
 
-![the ratio of bicycle users](https://user-images.githubusercontent.com/64011617/220013626-2505d1c8-b91d-482d-9a52-1330b452a688.png)
 ![Gambar 6.1 Ratio Pengguna Sepeda dalam Satu Tahun](the%20ratio%20of%20bicycle%20users.png){width="587"}
 
 Penggendara member 54.8% lebih banyak menggunakan sepeda dibandingkan dengan pengendara casual yang hanya 45.2% dalam kurun waktu satu tahun, akan tetapi selisihnya tidak terlalu signifikan. Sehingga perlu merancang strategi pemasaran baru untuk meningkatkan jumlah pengendara casual yang membeli keangotaan tahunan.
