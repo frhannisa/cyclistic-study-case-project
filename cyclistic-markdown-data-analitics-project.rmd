@@ -1,3 +1,5 @@
+# %% [code]
+# %% [code]
 ---
 title: "study_case_cyclistic"
 author: "Annisa Farah"
