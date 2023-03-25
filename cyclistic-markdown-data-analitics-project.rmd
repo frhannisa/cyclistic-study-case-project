@@ -1,0 +1,1112 @@
+---
+title: "study_case_cyclistic"
+author: "Annisa Farah"
+date: "2022-11-08"
+output:
+  word_document: default
+  html_document: default
+---
+
+MENINGKATKAN PENDAPATAN DI CYCLISTIC BIKE-SHARE
+
+Mengubah Pengendara Biasa Menjadi Anggota Tahunan
+
+Overview
+
+Report ini merupakan study case Google Data Analytics Professional Certificate tentang merancang strategi pemasaran baru untuk perusahaan Cyclistic untuk meningkatkan pendapatan dengan mengubah pengendara biasa menjadi anggota tahunan.
+
+Skenario
+
+Saya seorang analis data junior dan bekerja untuk sebuah perusahaan fiksi, Cyclistic. Direktur pemasaran ingin memaksimalkan jumlah keanggotaan tahunan karena dinilai lebih menguntungkan. Saya ditugaskan untuk merancang strategi pemasaran baru agar dapat memahami cara pelanggan menggunakan sepeda Cyclistic secara berbeda. Tujuannya untuk membuat kampanye yang menargetkan member casual (pengendara biasa) bisa menjadi member (anggota tahunan) secara efisien.
+
+Step 1 - Ask
+
+1.1. Latar belakang masalah
+
+Program berbagi sepeda yang menampilkan lebih dari 5.800 sepeda dan 600 stasiun dok. Cyclistic membedakan diri dari perusahaan lain dengan menawarkan sepeda reclining, hand tricycles, dan sepeda kargo, menjadikan bike-share lebih inklusif bagi penyandang disabilitas dan pengendara yang tidak dapat menggunakan sepeda roda dua standar. Mayoritas pengendara memilih sepeda tradisional; sekitar 8% pengendara menggunakan opsi bantuan. Pengguna sepeda lebih cenderung bersepeda untuk bersantai, tetapi sekitar 30% menggunakannya untuk bepergian ke tempat kerja setiap hari.
+
+Sampai saat ini, strategi pemasaran Cyclistic mengandalkan upaya untuk membangun kesadaran umum dan menarik segmen konsumen yang luas. Salah satu pendekatan yang membantu mewujudkan hal ini adalah fleksibilitas harga: tiket sekali jalan, tiket sehari penuh, dan keanggotaan tahunan. Pelanggan yang membeli tiket sekali jalan atau tiket sehari penuh disebut sebagai pengendara casual. Pelanggan yang membeli keanggotaan tahunan adalah member Cyclistic.
+
+Moreno telah menetapkan tujuan yang jelas: Merancang strategi pemasaran yang bertujuan untuk mengubah pengendara biasa menjadi anggota tahunan. Namun, untuk melakukannya tim analis pemasaran perlu lebih memahami perbedaan antara anggota tahunan dan pengendara biasa, mengapa pengendara akan bersedia membeli keanggotaan, dan bagaimana media digital dapat mempengaruhi taktik pemasaran mereka. Moreno dan timnya tertarik untuk menganalisis data perjalanan sepeda Cyclistic untuk mengidentifikasi trend.
+
+1.2. Pertanyaan
+
+Bagaimana pengendara member dan pengendara casual menggunakan sepeda secara berbeda?
+
+Mengapa pengendara casual membeli keanggotaan tahunan Cyclistic?
+
+Bagaimana Cyclistic menggunakan media digital untuk mempengaruhi pengendara casual untuk menjadi member?
+
+Step 2 - Prepare Data
+
+Mendownload dataset Cyclistic sepanjang tahun 2021,
+
+Melakukan ekstraksi file,
+
+Pengecekan standarisasi data berdasarkan ROCCC (Reliable, Original, Comprehensive, Current, and Credible), dan
+
+ROCCC
+
+Deskripsi
+
+Reliable
+
+Validitas: Kolom start_station_id dan end_station_id memiliki format yang kurang konsisten
+
+Kelengkapan:Terdapat nilai yang hilang (null values)
+
+Duplikat:Semua nilai pada kolom ride_id memiliki nilai yang unik
+
+Original
+
+Sumber Data dari pihak pertama
+
+Comprehensive
+
+Data cukup lengkap dan sebagian besar bebas dari kesalahan manusia
+
+Current
+
+Data terkini dan masih berkaitan dengan permasalahan
+
+Credible
+
+Data diperoleh dari pihak pertama secara langsung sehingga data memiliki kredibilitas yang cukup baik
+
+tabel 1.1 Standarisasi Data Berdasarkan ROCC
+
+Import dataset ke dalam environment R.
+
+Step 3 - Process
+
+3.1. Import library yang dibutuhkan
+
+{r}
+## Install and load the packages to use ##
+library(tidyverse)  ## helps wrangle data
+library(lubridate)  ## helps wrangle date attributes
+library(ggplot2)  ## helps visualize data
+library(rmarkdown)
+library(skimr) ## for summary dataframe structure and others atribute
+library(geosphere) ## to compute distance
+library(gridExtra) ## to arrange multiple grid-based
+
+3.2. Import data set
+
+{r}
+## Import data set ##
+X202101_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202101-divvy-tripdata.csv")
+X202102_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202102-divvy-tripdata.csv")
+X202103_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202103-divvy-tripdata.csv")
+X202104_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202104-divvy-tripdata.csv")
+X202105_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202105-divvy-tripdata.csv")
+X202106_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202106-divvy-tripdata.csv")
+X202107_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202107-divvy-tripdata.csv")
+X202108_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202108-divvy-tripdata.csv")
+X202109_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202109-divvy-tripdata.csv")
+X202110_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202110-divvy-tripdata.csv")
+X202111_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202111-divvy-tripdata.csv")
+X202112_divvy_tripdata <- read_csv("D:/Data Analitik/Course 8/Project_course_8/tripdata_2021/202112-divvy-tripdata.csv")
+
+
+3.3. Memeriksa kelengkapan dataframe
+
+Penting untuk melihat struktur dan ringkasan dari setiap data sebelum memprosesnya. Seluruh nama kolom dan tipe data konsisten, kolom ride_id semua nilainya unik. rideable_type hanya ada 3 jenis yaitu: electric_bike, classic_bike, dan docked_bike. Hanya ada 2 tipe member_casual yaitu: member dan casual
+
+{r}
+## Resume all data
+skim_without_charts(X202101_divvy_tripdata)
+skim_without_charts(X202102_divvy_tripdata)
+skim_without_charts(X202103_divvy_tripdata)
+skim_without_charts(X202104_divvy_tripdata)
+skim_without_charts(X202105_divvy_tripdata)
+skim_without_charts(X202106_divvy_tripdata)
+skim_without_charts(X202107_divvy_tripdata)
+skim_without_charts(X202108_divvy_tripdata)
+skim_without_charts(X202109_divvy_tripdata)
+skim_without_charts(X202110_divvy_tripdata)
+skim_without_charts(X202111_divvy_tripdata)
+skim_without_charts(X202112_divvy_tripdata)
+
+## Memeriksa struktur dataframe
+str(X202101_divvy_tripdata)
+str(X202102_divvy_tripdata)
+str(X202103_divvy_tripdata)
+str(X202104_divvy_tripdata)
+str(X202105_divvy_tripdata)
+str(X202106_divvy_tripdata)
+str(X202107_divvy_tripdata)
+str(X202108_divvy_tripdata)
+str(X202109_divvy_tripdata)
+str(X202110_divvy_tripdata)
+str(X202111_divvy_tripdata)
+str(X202112_divvy_tripdata)
+
+3.4. Menggabungkan seluruh data menjadi satu big dataframe
+
+{r}
+tripdata <- rbind(X202101_divvy_tripdata, X202102_divvy_tripdata, X202103_divvy_tripdata, X202104_divvy_tripdata, X202105_divvy_tripdata, X202106_divvy_tripdata, X202107_divvy_tripdata, X202108_divvy_tripdata, X202109_divvy_tripdata, X202110_divvy_tripdata, X202111_divvy_tripdata, X202112_divvy_tripdata)
+
+terdapat 13 variabel dan 5,595,063 baris pada big dataset tripdata.
+
+3.5. Clean up data
+
+{r}
+## data ride_id setiap baris harus unique value sehingga tidak boleh ada nilai yang sama
+tripdata %>% group_by(ride_id) %>% filter(n()>1)
+
+{r}
+## Secara logika, seluruh nilai kolom "started_at" memiliki date-time yang lebih dahulu (besar) dibandingkan dengan nilai pada kolom "ended_at"
+tripdata %>% filter(started_at > ended_at)
+
+
+{r}
+## hasilnya, lebih dari 137 baris yang memiliki nilai "started_at" yang lebih kecil dari pada "ended_at". Filter data yang tidak logis
+tripdata2 <- filter(tripdata, started_at < ended_at)
+tripdata2 %>% filter(started_at > ended_at) ## pengecekan kembali dataframe
+
+## memisahkan tanggal, tahun, bulan, hari, dan jam
+tripdata2$date <- lubridate::date(tripdata2$started_at)
+tripdata2$year <- lubridate::year(tripdata2$started_at)
+tripdata2$month <- lubridate::month(tripdata2$started_at)
+tripdata2$day <- lubridate::day(tripdata2$started_at)
+tripdata2$day_of_week <- format(as.Date(tripdata2$started_at), "%A")
+tripdata2$start_hour <- lubridate::hour(tripdata2$started_at)
+
+## menghitung durasi perjalanan dalam detik
+tripdata2 <- tripdata2 %>% mutate(ride_duration_secs=abs(difftime(tripdata2$ended_at,tripdata2$started_at,units="secs")))
+str(tripdata2)
+
+## menghitung jarak ke meter dari koordinat 
+tripdata2$ride_distance <- distGeo(matrix(c(tripdata2$start_lng, tripdata2$start_lat), ncol = 2),
+                                   matrix(c(tripdata2$end_lng, tripdata2$end_lat), ncol = 2))
+tripdata2$ride_distance <- tripdata2$ride_distance
+
+## dataframe terdapat beberapa entri "ride duration" dengan nilai negatif. nilai negatif merupakan entri yang tidak logis sehingga harus di hapus dari dataframe.
+tripdata2 <- tripdata2 %>% filter(ride_distance > 0 | start_station_name!="HQ QR") %>% drop_na()
+
+Step 4 - Menganalisis Data
+
+{r}
+## analisis durasi penggunaan user dalam detik
+table(tripdata2$member_casual) ## menghitung banyaknya perjalanan user
+mean(tripdata2$ride_duration_secs) 
+median(tripdata2$ride_duration_secs) 
+max(tripdata2$ride_duration_secs) 
+min(tripdata2$ride_duration_secs) 
+
+Perjalanan setiap pengendara dalam satu tahun
+
+Casual
+
+Member
+
+2,048,302
+
+2,539,802
+
+Durasi berkendara dari kedua pengendara selama 1 tahun:
+
+Mean = 1,308.715 secs
+
+Median = 732 secs
+
+Max = 3,356,649 secs
+
+Min = 1 secs
+
+{r}
+## membandingkan penggunaan member dan casual dalam waktu satu tahun
+aggregate(tripdata2$ride_duration_secs ~ tripdata2$member_casual, FUN = mean)
+aggregate(tripdata2$ride_duration_secs ~ tripdata2$member_casual, FUN = median)
+aggregate(tripdata2$ride_duration_secs ~ tripdata2$member_casual, FUN = max)
+aggregate(tripdata2$ride_duration_secs ~ tripdata2$member_casual, FUN = min)
+
+Perbandingan penggunaan sepeda kedua pengendara selama 1 tahun
+
+Agregat
+
+Member (secs)
+
+Casual (secs)
+
+Mean
+
+791.0405
+
+1950.6091
+
+Median
+
+583
+
+999
+
+Max
+
+89,738
+
+3,356,649
+
+Min
+
+1
+
+1
+
+{r}
+## analisis waktu penggunaan dalam meter
+mean(tripdata2$ride_distance) 
+median(tripdata2$ride_distance) 
+max(tripdata2$ride_distance) 
+min(tripdata2$ride_distance)
+
+Jarak tempuh kedua pengendara selama 1 tahun:
+
+Mean = 2,129.285 meter
+
+Median = 1621.533 meter
+
+Max = 3,376,261 meter
+
+Min = 0 meter
+
+Jarak tempuh 0 meter diakibatkan pengendara sepeda menggunakan stasiun yang sama untuk keberangkatan dan stasiun tujuan akhir.
+
+{r}
+## membandingkan jarak tempuh dalam meter
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual, FUN = mean)
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual, FUN = median)
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual, FUN = max)
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual, FUN = min)
+
+## membandingkan jarak tempuh dalam meter setiap user setiap hari
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual + tripdata2$day_of_week, FUN = mean)
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual + tripdata2$day_of_week, FUN = median)
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual + tripdata2$day_of_week, FUN = max)
+aggregate(tripdata2$ride_distance ~ tripdata2$member_casual + tripdata2$day_of_week, FUN = min)
+
+Perbandingan Jarak tempuh kedua pengendara selama 1 tahun
+
+Agregat
+
+Member (meter)
+
+Casual (meter)
+
+Mean
+
+2,087.532
+
+2,181.057
+
+Median
+
+1,563.732
+
+1,697.170
+
+Max
+
+31,531.60
+
+33,762.61
+
+Min
+
+0
+
+0
+
+Perbandingan Jarak tempuh kedua pengendara setiap hari
+
+Mean
+
+No
+
+Pengendara
+
+Day
+
+Jarak (Meter)
+
+1
+
+Casual
+
+Sunday
+
+2244.900
+
+2
+
+Member
+
+Sunday
+
+2187.047
+
+3
+
+Casual
+
+Monday
+
+2067.298
+
+4
+
+Member
+
+Monday
+
+2039.135
+
+5
+
+Casual
+
+Tuesday
+
+2094.318
+
+6
+
+Member
+
+Tuesday
+
+2054.092
+
+7
+
+Casual
+
+Wednesday
+
+2119.999
+
+8
+
+Member
+
+Wednesday
+
+2066.291
+
+9
+
+Casual
+
+Thursday
+
+2130.047
+
+10
+
+Member
+
+Thursday
+
+2046.676
+
+11
+
+Casual
+
+Friday
+
+2166.963
+
+12
+
+Member
+
+Friday
+
+2052.001
+
+13
+
+Casual
+
+Saturday
+
+2283.022
+
+14
+
+Member
+
+Saturday
+
+2186.894
+
+Median
+
+No
+
+Pengendara
+
+Day
+
+Jarak (Meter)
+
+1
+
+Casual
+
+Sunday
+
+1740.317
+
+2
+
+Member
+
+Sunday
+
+1650.854
+
+3
+
+Casual
+
+Monday
+
+1599.692
+
+4
+
+Member
+
+Monday
+
+1512.772
+
+5
+
+Casual
+
+Tuesday
+
+1633.966
+
+6
+
+Member
+
+Tuesday
+
+1521.386
+
+7
+
+Casual
+
+Wednesday
+
+1662.328
+
+8
+
+Member
+
+Wednesday
+
+1535.214
+
+9
+
+Casual
+
+Thursday
+
+1673.203
+
+10
+
+Member
+
+Thursday
+
+1523.702
+
+11
+
+Casual
+
+Friday
+
+1691.085
+
+12
+
+Member
+
+Friday
+
+1534.696
+
+13
+
+Casual
+
+Saturday
+
+1797.699
+
+14
+
+Member
+
+Saturday
+
+1666.662
+
+Max
+
+No
+
+Pengendara
+
+Day
+
+Jarak (Meter)
+
+1
+
+Casual
+
+Sunday
+
+28802.73
+
+2
+
+Member
+
+Sunday
+
+31531.60
+
+3
+
+Casual
+
+Monday
+
+29011.99
+
+4
+
+Member
+
+Monday
+
+25208.04
+
+5
+
+Casual
+
+Tuesday
+
+33762.61
+
+6
+
+Member
+
+Tuesday
+
+23418.15
+
+7
+
+Casual
+
+Wednesday
+
+31883.39
+
+8
+
+Member
+
+Wednesday
+
+24734.28
+
+9
+
+Casual
+
+Thursday
+
+29366.01
+
+10
+
+Member
+
+Thursday
+
+26318.04
+
+11
+
+Casual
+
+Friday
+
+32174.65
+
+12
+
+Member
+
+Friday
+
+27662.54
+
+13
+
+Casual
+
+Saturday
+
+30157.49
+
+14
+
+Member
+
+Saturday
+
+25221.31
+
+Min
+
+No
+
+Pengendara
+
+Day
+
+Jarak (Meter)
+
+1
+
+Casual
+
+Sunday
+
+0
+
+2
+
+Member
+
+Sunday
+
+0
+
+3
+
+Casual
+
+Monday
+
+0
+
+4
+
+Member
+
+Monday
+
+0
+
+5
+
+Casual
+
+Tuesday
+
+0
+
+6
+
+Member
+
+Tuesday
+
+0
+
+7
+
+Casual
+
+Wednesday
+
+0
+
+8
+
+Member
+
+Wednesday
+
+0
+
+9
+
+Casual
+
+Thursday
+
+0
+
+10
+
+Member
+
+Thursday
+
+0
+
+11
+
+Casual
+
+Friday
+
+0
+
+12
+
+Member
+
+Friday
+
+0
+
+13
+
+Casual
+
+Saturday
+
+0
+
+14
+
+Member
+
+Saturday
+
+0
+
+Visualisasi data
+
+{r}
+## grafik 1
+## membandingkan ratio jumlah pengendara dengan pie chart
+mindate <- min(tripdata2$date) 
+maxdate <- max(tripdata2$date) ## untuk keterangan periode penggunaan waktu di subtitle grafik
+
+ggplot(data = tripdata2)+
+  geom_bar(mapping=aes(x = "",fill = member_casual))+
+  coord_polar("y")+
+  annotate("text", label = "Member", x = 1, y = 900000, size = 10)+
+  annotate("text", label = "2,539,802", x = 1, y = 1200000, size = 6)+
+  annotate("text", label = "55.3%", x = 1, y = 1500000, size = 8)+
+  annotate("text", label = "Casual", x = 1 ,y = 3650000, size = 10)+
+  annotate("text", label = "2,048,302", x = 1, y = 3420000, size = 6)+
+  annotate("text", label = "44.6%", x = 1, y = 3070000, size = 8)+
+  theme(plot.background = element_blank(),
+        panel.background = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        legend.position =" none")+
+  labs(title ="The Ratio of Bicycle Users",
+       subtitle = paste0("Data from: ", mindate, " to ", maxdate),
+       caption = "source: Cyclistic")
+
+Gambar 6.1 Ratio Pengguna Sepeda dalam Satu Tahun
+
+Pengendara member 55.3% lebih banyak menggunakan sepeda dibandingkan dengan pengendara casual yang hanya 44.6% dalam kurun waktu satu tahun, akan tetapi selisihnya tidak terlalu signifikan. Sehingga perlu merancang strategi pemasaran baru untuk meningkatkan jumlah pengendara casual yang membeli keanggotaan tahunan.
+
+{r}
+## grafik 2
+## menemukan preferensi jenis sepeda yang digunakan kedua user 
+ggplot(
+  tripdata2%>%
+    group_by(member_casual, rideable_type) %>%
+    summarise(n = n())%>%
+    mutate(percentage = n/sum(n) *100),
+  aes(x = member_casual, y = n, fill = member_casual)) + 
+  geom_col(position = "dodge") +
+  geom_text(aes(label = paste0(round(percentage), "%")), position = position_dodge(0.85), vjust = 0) +
+  labs(x = "Users", y = "Number of Riders", title = "Bike Preference Based on User Type",
+       subtitle = paste0("Data from: ", mindate, " to ", maxdate),
+       caption = "source: Cyclistic")+
+  scale_y_continuous(breaks = c(0, 500000,1000000, 1500000, 2000000), labels = c("0", "500K", "1M", "1.5M", "2M"))+
+  facet_wrap(~rideable_type)
+
+Gambar 6.2 Preferensi Jenis Sepeda yang Digunakan
+
+Terdapat 3 tipe sepeda yang disediakan perusahaan Cyclistic, diantaranya: classic bike, docked bike, dan electric bike. Tipe sepeda paling banyak digunakan dalam kurun waktu satu tahun, yaitu: classic bike, electric bike, dan docked bike. Beberapa kemungkinan alasan pengendara dalam memilih sepeda yang digunakan:
+
+Classic Bike
+
+Docked Bike
+
+Electric Bike
+
+lebih praktis digunakan dibandingkan electric bike dan docked bike
+
+fasilitas stasiun yang masih kurang karena tipe docked bike hanya dapat di parkir pada stasiun tertentu
+
+Fasilitas charging daya untuk tipe sepeda ini mungkin masih belum baik
+
+lebih sehat dibandingkan dengan electric bike
+
+penempatan sepeda kurang strategis
+
+penempatan sepeda kurang stategis
+
+cost sewa lebih murah
+
+mengayuh ketika baterai habis terasa sulit dan berat
+
+{r}
+## grafik 3
+## melakukan evaluasi terhadap jarak dan waktu rata-rata mengendarai sepeda untuk kedua jenis pengendara
+averages <- tripdata2 %>% group_by(member_casual) %>%
+  summarise(average_duration = mean(ride_duration_secs), average_distance = mean(ride_distance)) 
+
+# plot grafik untuk rata-rata durasi berkendara 
+graph_avr_duration <- ggplot(data = averages)+
+  geom_col(mapping = aes(x= member_casual, y = average_duration, fill = member_casual))+
+  labs(title = "Users Average Duration", x = "Users", y = "Duration (Secs)",
+       subtitle = "in one year")
+
+## plot grafik untuk rata-rata jarak berkenda 
+graph_avr_distance <- ggplot(data = averages)+
+  geom_col(mapping = aes(x = member_casual, y = average_distance, fill = member_casual))+
+  labs(title = "Users Average Distance", x = "Users", y = "Distance (Meter)",
+       subtitle = "in one year",
+       caption = "source: Cyclistic")
+
+## gabungkan 2 plot grafik kedalam satu grid 
+grid.arrange(graph_avr_duration,graph_avr_distance, ncol = 2)
+
+Gambar 6.3 Rata-Rata Waktu dan Jarak Penggunaan Sepeda
+
+Durasi rata-rata penggunaan sepeda paling banyak digunakan oleh pengendara casual mencapai 1951 detik dan pengendara member 791 detik dalam satu tahun. Jarak tempuh sepeda rata-rata pengendara casual 2181 meter dan untuk pengendara member 2088 meter. Melihat durasi waktu dan jarak berkendara kedua jenis pengendara dapat disimpulkan:
+
+Pengendara casual, durasi berkendara lebih lama dan jarak tempuh sedikit lebih jauh dari pengendara member. Kemungkinan pengendara casual menggunakan sepeda dalam kondisi santai dan berkendara ke tempat yang lebih jauh seperti untuk rekreasi dan bersantai.
+
+Pengendara member, durasi berkendara lebih singkat dan jarak tempuh tidak terlalu jauh. Kemungkinan pengendara member menggunakan sepeda dalam kondisi yang lebih cepat untuk menuju ke tempat yang dekat seperti untuk pergi bekerja.
+
+{r}
+## grafik 4
+## analisis jumlah pengendara sepeda setiap bulannya bedasarkan tipe pengendara 
+monthly_avg <- tripdata2 %>% 
+  group_by(member_casual, month) %>% 
+  summarise(number_of_riders = n(), average_duration = mean(ride_distance)) %>%
+  arrange(month) %>% 
+  ungroup()
+
+## mengurutkan bulan 
+monthly_avg$month <- factor(monthly_avg$month, levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ))
+
+ggplot(data = monthly_avg)+
+  geom_col(mapping = aes(x = month, y = number_of_riders, fill = member_casual))+
+  labs(title = "Monthly Bicycle Usage Ratio", x = "Month", y = "Number of Riders",
+       subtitle = paste0("Data from: ", mindate, " to ", maxdate),
+       caption = "source: Cyclistic")+
+  scale_y_continuous(breaks = c(0, 100000, 200000, 300000, 400000, 500000, 600000, 700000), labels = c("0", "100K", "200K", "300K", "400K", "500K", "600K", "700K"))
+
+
+Gambar 6.4 Rasio Pemakaian Sepeda Setiap Bulan
+
+Lokasi stasiun yang berada di daerah Chicago mengakibatkan penggunaan sepeda bergantung dengan musim. Adapun pembagian musim secara umum sebagai berikut:
+
+Musim Semi (Maret - Mei)
+
+Musim Panas (Juni - Agustus)
+
+Musim Gugur (September - November)
+
+Musim Dingin (Desember - Februari)
+
+Pengendara banyak menggunakan sepeda di musim semi hingga musim panas. Sementara untuk musim gugur penggunaan sepeda mulai menurun karena kondisi cuaca yang mulai dingin. Pada musim dingin penggunaan sepeda sangat sedikit, menggunakan sepeda di cuaca yang bersalju sangat kurang efektif.
+
+{r}
+## grafik 5
+## analisis jumlah pengendara sepeda setiap hari bedasarkan tipe pengendara
+daily_avg <- tripdata2 %>% 
+  group_by(member_casual, day_of_week) %>% 
+  summarise(number_of_riders = n(), average_duration = mean(ride_distance)) %>% 
+  arrange(day_of_week) %>% 
+  ungroup()
+
+daily_avg$day_of_week <- factor(daily_avg$day_of_week, levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" ))
+
+ggplot(data = daily_avg)+
+  geom_col(mapping = aes(x = day_of_week, y = number_of_riders, fill = member_casual))+
+  labs(title = "Daily Bicycle Usage Ratio", x = "Day", y = "Number of Riders",
+       subtitle = paste0("Data from: ", mindate, " to ", maxdate),
+       caption = "source: Cyclistic")+
+  scale_y_continuous(breaks = c(0, 200000, 400000, 600000, 800000), labels = c("0", "200K", "400K", "600K", "800k"))
+
+
+Gambar 6.5 Rasio Pemakaian Sepeda Setiap Hari
+
+Dalam perjalanan per hari, pengendara casual menggunakan sepeda lebih banyak dibandingkan pengendara member setiap harinya. Pada akhir pekan penggunaan sepeda mengalami peningkatan untuk pengendara casual dan mengalami sedikit penurunan pada pengendara member. Hal ini mungkin terjadi karena banyak pengguna sepeda lebih cenderung bersepeda untuk bersantai di akhir pekan sehingga penyewaan sepeda meningkat. Pengendara member mengalami penurunan penggunaan sepeda pada akhir pekan, karena penggunaan untuk pergi ke tempat kerja berkurang.
+
+{r}
+## grafik 6
+## menganalisis frekuensi penggunaan sepeda setiap jamnya pada akhir pekan
+minhour <- min(tripdata2$start_hour) 
+maxhour <- max(tripdata2$start_hour)
+
+weekend_avg <- tripdata2 %>% filter(day_of_week %in% c("Sunday","Saturday")) %>%  
+  group_by(member_casual, start_hour) %>%
+  summarise(number_of_riders = n()) %>% 
+  ungroup()
+
+## membuat plot untuk merata-ratakan jumlah pengendara sepeda
+weekend_plot <- mean(weekend_avg$number_of_riders)
+
+ggplot(data = weekend_avg, mapping = aes(x = start_hour, y = number_of_riders, color = member_casual, group = member_casual))+
+  geom_point(size = 3)+
+  geom_line(size = 1)+ 
+  geom_hline(aes(yintercept = weekend_plot), colour = "green", linetype = "dashed")+
+  geom_label(aes(x = 1,y = weekend_plot+1, label = "average rider", hjust = 0), colour = "white", fill = "green", fontface="bold")+
+  annotate("rect", xmin = 10, xmax = 19, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "blue")+
+  annotate("text", x = 14, y = 40000, label = "rush hours", size = 5, fontface = "bold", color = "red")+
+  labs(title = "Bicycle Usage Frequency per Hour (Weekend)", x = "Hour", y = "Number of Riders",
+       subtitle = paste0("From: ", minhour, " AM to ", maxhour, " PM "),
+       caption = "source: Cyclistic") +
+  scale_y_continuous(breaks = c(0, 10000, 20000, 30000, 40000, 50000, 60000, 70000), labels = c("0", "10K", "20K", "30K", "40K", "50k", "60K", "70k")) +
+  scale_x_continuous( breaks = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23)) ## atur skala x jadi setiap jam
+
+Gambar 6.6 Frekuensi Penggunaan Sepeda Setiap Jam pada Akhir Pekan
+
+Di akhir pekan terjadi lonjakan penggunaan sepeda pada pukul 10.00 pagi hingga 19.00 sore. Jam sibuk didominasi oleh pengendara casual karena merupakan waktu terbaik untuk menghabiskan waktu untuk bersantai di akhir pekan.
+
+{r}
+## grafik 7
+## menganalisis frekuensi penggunaan sepeda setiap jamnya pada hari kerja
+weekday_avg <- tripdata2 %>% filter(day_of_week != "Sunday" & day_of_week != "Saturday") %>%  
+  group_by(member_casual, start_hour) %>%
+  summarise(number_of_riders = n()) %>% 
+  ungroup()
+
+## membuat plot untuk merata-ratakan jumlah pengendara sepeda
+weekday_plot <- mean(weekday_avg$number_of_riders)
+
+ggplot(data = weekday_avg, mapping = aes(x = start_hour, y = number_of_riders, color = member_casual, group = member_casual))+
+  geom_point(size = 3)+
+  geom_line(size = 1)+
+  geom_hline(aes(yintercept = weekday_plot),colour = "green",linetype = "dashed")+
+  geom_label(aes(x = 1, y = weekday_plot+1, label = "average rider", hjust = 0), colour = "white", fill = "green", fontface = "bold")+
+  annotate("rect", xmin = 6, xmax = 9, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "blue")+
+  annotate("rect", xmin = 15, xmax = 19, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "blue")+
+  annotate("text", x = 7.5, y = 150000, label = "rush hours", size = 5, fontface = "bold", color = "red")+
+  annotate("text", x = 17, y = 80000, label = "rush hours", size = 5, fontface = "bold", color = "red")+
+  labs(title = "Bicycle Usage Frequency per Hour (Weekdays)", x = "Hour", y = "Number of Riders",
+       subtitle = paste0("From: ", minhour, " AM to ", maxhour, " PM "),
+       caption = "source: Cyclistic") +
+  scale_y_continuous(breaks = c(0, 50000, 100000, 150000, 200000), labels = c("0", "50K", "100K", "150K", "200K")) +
+  scale_x_continuous( breaks = c(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23))
+
+Gambar 6.7 Frekuensi Penggunaan Sepeda Setiap Jam pada Hari Kerja
+
+Di hari kerja, pengendara member mendominasi berkendara pada jam sibuk kerja yaitu pukul 6.00-9.00 pagi dan 15.00-19.00 sore yang merupakan waktu untuk berangkat dan pulang kerja. Sekitar pukul 12.00 siang mengalami sedikit lonjakan, waktu tersebut merupakan waktu untuk makan siang. Kemungkinan pengendara member menggunakan sepeda untuk pergi membeli makan siang. Sedangkan pengendara casual terjadi lonjakan berkendara pada pukul 15.00-19.00 sore. Kemungkinan pengendara casual menggunakan sepeda pada jam tersebut sebagai alternatif transportasi karena kemacetan saat jam pulang kerja ataupun sekedar menggunakan sepeda hanya untuk bersantai.
+
+{r}
+## grafik 8
+## 10 stasiun yang paling sering digunakan pengendara jenis member 
+top_station_member <- tripdata2 %>% filter(member_casual == "member") %>%  
+  group_by(start_station_name) %>%
+  summarise(number_of_riders = n()) %>% 
+  arrange(-number_of_riders) %>% 
+  head(n = 10) %>% 
+  ungroup()
+
+graph_tsm <- ggplot(data = top_station_member)+
+  geom_col(mapping = aes(x = number_of_riders, y = reorder(start_station_name, number_of_riders)))+
+  labs(title = "Top 10 Station Used by Member User", x = " Number of Riders", y = "Name of Station",
+       subtitle = paste0("Data from: ", mindate, " to ", maxdate))+
+  scale_x_continuous(breaks = c(0, 5000, 10000, 15000, 20000, 25000), labels = c("0", "5K", "10K", "15K", "20K", "25K"))
+
+## 10 stasiun yang paling sering digunakan pengendara jenis casual
+top_station_casual <- tripdata2 %>% filter(member_casual == "casual") %>%  
+  group_by(start_station_name) %>%
+  summarise(number_of_riders = n()) %>% 
+  arrange(-number_of_riders) %>% 
+  head(n = 10) %>% 
+  ungroup()
+
+graph_tsc <- ggplot(data = top_station_casual)+
+  geom_col(mapping = aes(x = number_of_riders, y = reorder(start_station_name, number_of_riders)))+
+  labs(title = "Top 10 Station Used by Casual User", x = " Number of Riders", y = "Name of Station",
+       subtitle = paste0("Data from: ", mindate, " to ", maxdate),
+       caption = "source: Cyclistic")+
+  scale_x_continuous(breaks = c(0, 20000, 40000, 60000), labels = c("0", "20K", "40K", "60K"))
+
+## gabungkan 2 plot grafik kedalam satu grid
+grid.arrange(graph_tsm, graph_tsc, ncol=2)
+
+Gambar 6.8 10 Stasiun Tersibuk
+
+Stasiun sepeda yang digunakan pengendara casual cenderung terletak di lokasi rekreasi sekitar pantai. Sementara lokasi stasiun sepeda yang digunakan oleh pengendara member cenderung berada di kawasan pertokoan dan perkantoran kecenderungan penggunaan setiap pengendara berbeda. Pengendara casual lebih menggunakan sepeda untuk bersantai di tempat rekreasi sementara pengendara member menggunakan sepeda sebagai alat transportasi menuju tempat kerja atau berbelanja. Terdapat 2 stasiun yang paling sibuk yaitu: Wells St & Concord Ln dan Wells St & Elm St, karena lalu lintas tinggi pengendara member dan casual melakukan keberangkatan sepeda dari stasiun tersebut.
+
+Step 5 - Membagikan
+
+Beberapa temuan hasil dari hasil menganalisis data:
+
+Sebagian besar pengendara member menggunakan sepeda untuk bekerja sementara pengendara casual untuk rekreasi,
+
+Jenis sepeda yang paling banyak digunakan dari kedua pengendara, yaitu: classic > electric > docked,
+
+Pengendara meningkat saat cuaca semakin hangat,
+
+Penggunaan sepeda pada hari kerja cenderung di waktu berangkat dan pulang kerja, di akhir pekan cenderung di waktu 10.00 hingga 19.00, dan
+
+Stasiun yang terletak di sekitar pantai banyak diakses oleh pengendara casual, sementara stasiun yang terletak di kawasan pertokoan dan perkantoran banyak diakses pengendara member.
+
+Step 6 - Bertindak
+
+Strategi untuk mendorong pengendara casual membeli keanggotaan tahunan
+
+Evaluasi untuk pengendara member:
+
+Keanggotaan tahunan harus terlihat lebih hemat biaya untuk lebih meyakinkan pengendara casual membeli keanggotaan tahunan, dan
+
+Membuat akses prioritas penggunaan sepeda untuk pengendara member saat di jam sibuk.
+
+Evaluasi untuk pengendara casual:
+
+Tiket sekali jalan dan tiket satu hari penuh terlalu fleksibel dan tampak tidak ada manfaat nyata untuk memiliki keanggotaan tahunan,
+
+Menaikkan harga harga tiket sekali jalan dan sehari penuh, dan
+
+Memberikan penawaran membership mingguan atau bulanan yang lebih murah dibandingkan total pembelian tiket per hari selama satu minggu atau satu bulan, mungkin saja pelanggan tidak ingin terikat waktu yang panjang dan biaya yang lebih mahal untuk membeli keanggotaan tahunan.
+
+Strategi promosi kampanye
+
+Kampanye pemasaran secara online melalui social media dapat dimulai pada bulan Maret saat mulai memasuki musim semi untuk memperkenalkan promosi keanggotaan tahunan saat pelanggan kembali lagi beraktivitas menggunakan sepeda,
+
+Perkenalkan kesepakatan promosi keanggotaan mingguan dan bulanan untuk pengendara casual di akhir pekan, diwaktu tersebut pengendara casual dominan menggunakan sepeda,
+
+Untuk meningkatnya minat terhadap sepeda listrik pada kedua jenis pengendara perlu menyertakan promosi dan penawaran khusus terkait penggunaan sepeda listrik, serta lebih banyak meletakan sepeda listrik pada tempat-tempat yang digunakan untuk bersantai, dan
+
+Tempat paling strategis meletakan Iklan luar ruang yaitu di stasiun awal paling populer dan di stasiun dengan lalu lintas tinggi seperti di Wells St & Concord Ln dan Wells St & Elm St.
+
